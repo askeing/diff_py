@@ -81,7 +81,7 @@ class HTMLDiffHelper(BaseDiffHelper):
         # init logger
         self.logger = logging.getLogger(__name__)
         # setup the html_file
-        if html_file == None:
+        if html_file is None:
             self.html_file = 'diff.html'
         else:
             self.html_file = html_file
@@ -91,7 +91,9 @@ class HTMLDiffHelper(BaseDiffHelper):
 
     def diff_file(self, file1, file2):
         html_diff = difflib.HtmlDiff(wrapcolumn=HTMLDiffHelper.html_wrapcolumn)
-        table = html_diff.make_table(open(file1, 'r').readlines(), open(file2, 'r').readlines(), fromdesc=file1, todesc=file2, context=self.contextual_differences)
+        with open(file1, 'r') as f1:
+            with open(file2, 'r') as f2:
+                table = html_diff.make_table(f1.readlines(), f2.readlines(), fromdesc=file1, todesc=file2, context=self.contextual_differences)
         self.div_container.append(raw(table))
 
     def diff_dir(self, dir1, dir2):
@@ -122,21 +124,21 @@ class HTMLDiffHelper(BaseDiffHelper):
             for name in dcmp.diff_files:
                 if self.is_binary_file(os.path.join(dcmp.left, name), 1024):
                     self.div_container.append(
-                                              html.table(
-                                                         html.thead(
-                                                                    html.tr(
-                                                                            html.th(os.path.join(dcmp.left, name)),
-                                                                            html.th(os.path.join(dcmp.right, name))
-                                                                            )
-                                                                    ),
-                                                         html.tbody(
-                                                                    html.tr(
-                                                                            html.td('Binary files differ')
-                                                                            )
-                                                                    ),
-                                                         class_='table'
-                                                         )
-                                              )
+                        html.table(
+                            html.thead(
+                                html.tr(
+                                    html.th(os.path.join(dcmp.left, name)),
+                                    html.th(os.path.join(dcmp.right, name))
+                                )
+                            ),
+                            html.tbody(
+                                html.tr(
+                                    html.td('Binary files differ')
+                                )
+                            ),
+                            class_='table'
+                        )
+                    )
                 else:
                     self.diff_file(os.path.join(dcmp.left, name), os.path.join(dcmp.right, name))
         # handle sub-dirs
@@ -199,19 +201,19 @@ class HTMLDiffHelper(BaseDiffHelper):
         }
         """
         html_report = html.html(
-                                html.head(
-                                          html.meta(name='Content-Type', value='text/html; charset=utf-8'),
-                                          html.title('Diff Report'),
-                                          html.style(
-                                                     raw(html_report_css),
-                                                     type='text/css'
-                                                     )
-                                          ),
-                                html.body(
-                                          html.h1('Diff Report'),
-                                          self.div_container
-                                          )
-                                )
+            html.head(
+                html.meta(name='Content-Type', value='text/html; charset=utf-8'),
+                html.title('Diff Report'),
+                html.style(
+                    raw(html_report_css),
+                    type='text/css'
+                )
+            ),
+            html.body(
+                html.h1('Diff Report'),
+                self.div_container
+            )
+        )
         self.report = html_report
         return self.report
 
@@ -243,12 +245,14 @@ class ConsoleDiffHelper(BaseDiffHelper):
             self.diff_type = diff_type_unified
 
     def diff_file(self, file1, file2):
-        if self.diff_type == ConsoleDiffHelper.diff_type_unified:
-            diff = difflib.unified_diff(open(file1, 'r').readlines(), open(file2, 'r').readlines(), fromfile=file1, tofile=file2)
-        elif self.diff_type == ConsoleDiffHelper.diff_type_context:
-            diff = difflib.context_diff(open(file1, 'r').readlines(), open(file2, 'r').readlines(), fromfile=file1, tofile=file2)
-        elif self.diff_type == ConsoleDiffHelper.diff_type_ndiff:
-            diff = difflib.ndiff(open(file1, 'r').readlines(), open(file2, 'r').readlines())
+        with open(file1, 'r') as f1:
+            with open(file2, 'r') as f2:
+                if self.diff_type == ConsoleDiffHelper.diff_type_unified:
+                    diff = difflib.unified_diff(f1.readlines(), f2.readlines(), fromfile=file1, tofile=file2)
+                elif self.diff_type == ConsoleDiffHelper.diff_type_context:
+                    diff = difflib.context_diff(f1.readlines(), f2.readlines(), fromfile=file1, tofile=file2)
+                elif self.diff_type == ConsoleDiffHelper.diff_type_ndiff:
+                    diff = difflib.ndiff(f1.readlines(), f2.readlines())
         diff_string = ''.join(diff)
         self.result_list.append('diff ' + file1 + ' ' + file2 + '\n' + diff_string)
 
@@ -275,4 +279,4 @@ class ConsoleDiffHelper(BaseDiffHelper):
         return self.report
 
     def make_report(self):
-        print self.report
+        print(self.report)

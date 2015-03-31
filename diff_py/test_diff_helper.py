@@ -9,16 +9,20 @@ from diff_py import *
 
 class DiffHelperTest(unittest.TestCase):
     def setUp(self):
+        # Mapping the Python2's assertRegexpMatches to assertRegex for supporting Python3
+        if not hasattr(unittest.TestCase, 'assertRegex'):
+            self.assertRegex = self.assertRegexpMatches
+
         self.file_a1 = tempfile.NamedTemporaryFile()
-        self.file_a1.write('A')
+        self.file_a1.write('A'.encode('utf-8'))
         self.file_a1.flush()
 
         self.file_a2 = tempfile.NamedTemporaryFile()
-        self.file_a2.write('A')
+        self.file_a2.write('A'.encode('utf-8'))
         self.file_a2.flush()
 
         self.file_b = tempfile.NamedTemporaryFile()
-        self.file_b.write('B')
+        self.file_b.write('B'.encode('utf-8'))
         self.file_b.flush()
 
         self.file_name_a = 'FILE_A'
@@ -88,7 +92,7 @@ class DiffHelperTest(unittest.TestCase):
         result = dh.diff(self.dir_a1, self.dir_b)
         expected_re = r'<h2>Only in {0}</h2>\s*<ul>\s*<li>{1}</li>\s*</ul>'.format(self.dir_b, self.file_name_b)
         self.assertIsInstance(result, html.html, 'The result is not html object.')
-        self.assertRegexpMatches(result.unicode(), expected_re)
+        self.assertRegex(result.unicode(), expected_re)
 
 
 if __name__ == '__main__':
