@@ -75,7 +75,7 @@ class BaseDiffHelper(object):
 
 class HTMLDiffHelper(BaseDiffHelper):
     html_wrapcolumn = 80
-    
+
     def __init__(self, html_file=None, contextual_differences=True):
         super(HTMLDiffHelper, self).__init__()
         # init logger
@@ -226,7 +226,7 @@ class ConsoleDiffHelper(BaseDiffHelper):
     diff_type_ndiff = 'ndiff'
 
     html_wrapcolumn = 80
-    
+
     def __init__(self, diff_type='unified'):
         """
         The diff_type should be one of 'unified', 'context', and 'ndiff'.
@@ -276,4 +276,3 @@ class ConsoleDiffHelper(BaseDiffHelper):
 
     def make_report(self):
         print self.report
-

@@ -25,7 +25,7 @@ class DiffHelperTest(unittest.TestCase):
         self.file_name_b = 'FILE_B'
         self.dir_a1 = tempfile.mkdtemp()
         open(os.path.join(self.dir_a1, self.file_name_a), 'w').close()
-        
+
         self.dir_a2 = tempfile.mkdtemp()
         open(os.path.join(self.dir_a2, self.file_name_a), 'w').close()
 
