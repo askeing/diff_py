@@ -1,0 +1,8 @@
+diff.html
+
+*.pyc
+*~
+
+.env/
+.idea/
+*.egg-info/
