@@ -29,9 +29,12 @@ class DiffRunner(object):
         format_group.add_argument('-n', '--ndiff', action='store_true', dest='ndiff', help='output Python Differ-style context')
         format_group.add_argument('-H', '--html', metavar='OUTPUT_FILE', type=argparse.FileType('w'), action='store', dest='html', help='output HTML format context')
         parser.add_argument('FILES', action=check_files_dirs, nargs=2, help='can be "FILE1 FILE2", "DIR1 DIR2", "FILE DIR", or "DIR FILE"')
-        self.version = '0.0.1'
-        with open('diff_py' + os.sep + 'VERSION') as f:
-            self.version = f.readline()
+        cur_dir = os.path.dirname(os.path.abspath(__file__))
+        try:
+            with open(os.path.join(cur_dir, 'VERSION')) as f:
+                self.version = f.readline()
+        except:
+            self.version = '?.?.?'
         parser.add_argument('-v', '--version', action='version', version='%(prog)s {version}'.format(version=self.version))
 
         # parser the argv
