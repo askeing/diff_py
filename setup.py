@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 # get documentation from the README
 here = os.path.dirname(os.path.abspath(__file__))
 try:
-    with open(os.path.join(here, 'README.md')) as f:
+    with open(os.path.join(here, 'README.rst')) as f:
         description = f.read()
 except:
     description = ''
@@ -31,7 +31,7 @@ setup(name='diff_py',
       keywords='diff html ',
       author='Askeing Yen',
       author_email='askeing@gmail.com',
-      url='http://www.github.com/askeing/diff_tool',
+      url='http://www.github.com/askeing/diff_py',
       license='MPL',
       packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
       include_package_data=True,
