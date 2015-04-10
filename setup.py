@@ -12,7 +12,7 @@ except:
 # version
 try:
     with open('diff_py' + os.sep + 'VERSION') as f:
-        version = f.readline()
+        version = f.readline().strip()
 except:
     version = '0.0.1'
 
