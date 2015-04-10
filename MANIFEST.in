@@ -1,0 +1,4 @@
+exclude MANIFEST.in
+include README.rst
+include diff_py/VERSION
+include diff_py/requirements.txt

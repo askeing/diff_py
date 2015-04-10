@@ -37,6 +37,7 @@ setup(name='diff_py',
       url='http://www.github.com/askeing/diff_py',
       license='MPL',
       packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
+      package_data={'diff_py': ['diff_py/VERSION', 'diff_py/requirements.txt']},
       include_package_data=True,
       zip_safe=False,
       entry_points="""
