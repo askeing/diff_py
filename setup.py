@@ -4,20 +4,27 @@
 import os
 from setuptools import setup, find_packages
 
+here = os.path.dirname(os.path.abspath(__file__))
 # get documentation from the README
-long_description = ''
-with open('README.rst') as doc:
-    long_description = doc.read()
+try:
+    with open(os.path.join(here, 'README.rst')) as doc:
+        long_description = doc.read()
+except:
+    long_description = ''
 
 # version
-version = '0.0.1'
-with open('diff_py' + os.sep + 'VERSION') as f:
-    version = f.readline().strip()
+try:
+    with open(os.path.join(here, 'diff_py', 'VERSION')) as f:
+        version = f.readline().strip()
+except:
+    version = '0.0.1'
 
 # dependencies
-deps = []
-with open('diff_py' + os.sep + 'requirements.txt') as f:
-    deps = f.read().splitlines()
+try:
+    with open(os.path.join(here, 'diff_py', 'requirements.txt')) as f:
+        deps = f.read().splitlines()
+except:
+    deps = ['py']
 
 setup(name='diff_py',
       version=version,
