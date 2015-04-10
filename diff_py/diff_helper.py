@@ -156,7 +156,7 @@ class HTMLDiffHelper(BaseDiffHelper):
             margin-right: auto;
         }
         table {
-            font-family:Courier;
+            font-family:monospace, "Courier New", Courier;
             border-collapse: collapse;
             border: 1px solid gray;
             width: 100%;
@@ -169,18 +169,9 @@ class HTMLDiffHelper(BaseDiffHelper):
             border: 1px solid gray;
         }
         table td {
-            font-size: 12px;
+            font-size: 10px;
         }
         /* For diff table */
-        table.diff {
-            font-family:Courier;
-            border-collapse: collapse;
-            border: 1px solid gray;
-            width: 100%;
-            margin-left: auto;
-            margin-right: auto;
-            margin-bottom: 20px;
-        }
         .diff_header {
             background-color:#e0e0e0;
         }
@@ -218,8 +209,11 @@ class HTMLDiffHelper(BaseDiffHelper):
         return self.report
 
     def make_report(self):
-        with open(self.html_file, 'w') as f:
-            f.write(self.report.unicode(indent=2).encode('utf8'))
+        if isinstance(self.html_file, file):
+            self.html_file.write(self.report.unicode(indent=2).encode('utf8'))
+        else:
+            with open(self.html_file, 'w') as f:
+                f.write(self.report.unicode(indent=2).encode('utf8'))
 
 
 class ConsoleDiffHelper(BaseDiffHelper):
@@ -229,7 +223,7 @@ class ConsoleDiffHelper(BaseDiffHelper):
 
     html_wrapcolumn = 80
 
-    def __init__(self, diff_type='unified'):
+    def __init__(self, diff_type='unified', n=3):
         """
         The diff_type should be one of 'unified', 'context', and 'ndiff'.
         """
@@ -243,14 +237,15 @@ class ConsoleDiffHelper(BaseDiffHelper):
             self.diff_type = diff_type
         else:
             self.diff_type = diff_type_unified
+        self.n = n
 
     def diff_file(self, file1, file2):
         with open(file1, 'r') as f1:
             with open(file2, 'r') as f2:
                 if self.diff_type == ConsoleDiffHelper.diff_type_unified:
-                    diff = difflib.unified_diff(f1.readlines(), f2.readlines(), fromfile=file1, tofile=file2)
+                    diff = difflib.unified_diff(f1.readlines(), f2.readlines(), fromfile=file1, tofile=file2, n=self.n)
                 elif self.diff_type == ConsoleDiffHelper.diff_type_context:
-                    diff = difflib.context_diff(f1.readlines(), f2.readlines(), fromfile=file1, tofile=file2)
+                    diff = difflib.context_diff(f1.readlines(), f2.readlines(), fromfile=file1, tofile=file2, n=self.n)
                 elif self.diff_type == ConsoleDiffHelper.diff_type_ndiff:
                     diff = difflib.ndiff(f1.readlines(), f2.readlines())
         diff_string = ''.join(diff)
