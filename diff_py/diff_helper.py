@@ -38,6 +38,10 @@ class BaseDiffHelper(object):
     def diff_dir(self):
         raise NotImplementedError()
 
+    @property
+    def handle_dcmp(self, dcmp):
+        raise NotImplementedError()
+
     def diff(self, a, b):
         # a is file, b is file
         if os.path.isfile(a) and os.path.isfile(b):
@@ -98,6 +102,9 @@ class HTMLDiffHelper(BaseDiffHelper):
 
     def diff_dir(self, dir1, dir2):
         dcmp = dircmp(dir1, dir2)
+        self.handle_dcmp(dcmp)
+
+    def handle_dcmp(self, dcmp):
         # handle left dir1
         self.div_container.append(html.h2('Only in %s' % (dcmp.left,)))
         if len(dcmp.left_only) == 0:
@@ -143,7 +150,7 @@ class HTMLDiffHelper(BaseDiffHelper):
                     self.diff_file(os.path.join(dcmp.left, name), os.path.join(dcmp.right, name))
         # handle sub-dirs
         for sub_dcmp in dcmp.subdirs.values():
-            diff_dir(sub_dcmp)
+            self.handle_dcmp(sub_dcmp)
 
     def generate_diff_result(self):
         html_report_css = """
@@ -253,6 +260,9 @@ class ConsoleDiffHelper(BaseDiffHelper):
 
     def diff_dir(self, dir1, dir2):
         dcmp = dircmp(dir1, dir2)
+        self.handle_dcmp(dcmp)
+
+    def handle_dcmp(self, dcmp):
         # handle left dir1
         for name in dcmp.left_only:
             self.result_list.append('Only in %s: %s' % (dcmp.left, name))
@@ -267,7 +277,7 @@ class ConsoleDiffHelper(BaseDiffHelper):
                 self.diff_file(os.path.join(dcmp.left, name), os.path.join(dcmp.right, name))
         # handle sub-dirs
         for sub_dcmp in dcmp.subdirs.values():
-            diff_dir(sub_dcmp)
+            self.handle_dcmp(sub_dcmp)
 
     def generate_diff_result(self):
         self.report = '\n'.join(self.result_list)
