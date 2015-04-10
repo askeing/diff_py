@@ -1,4 +1,5 @@
 import os
+import codecs
 import difflib
 import logging
 from filecmp import dircmp
@@ -95,8 +96,8 @@ class HTMLDiffHelper(BaseDiffHelper):
 
     def diff_file(self, file1, file2):
         html_diff = difflib.HtmlDiff(wrapcolumn=HTMLDiffHelper.html_wrapcolumn)
-        with open(file1, 'r') as f1:
-            with open(file2, 'r') as f2:
+        with codecs.open(file1, 'r', encoding='utf8') as f1:
+            with codecs.open(file2, 'r', encoding='utf8') as f2:
                 table = html_diff.make_table(f1.readlines(), f2.readlines(), fromdesc=file1, todesc=file2, context=self.contextual_differences)
         self.div_container.append(raw(table))
 
