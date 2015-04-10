@@ -1,8 +1,7 @@
 diff_py
 =====
 .. image:: https://travis-ci.org/askeing/diff_py.svg?branch=master
-	:target: https://travis-ci.org/askeing/diff_py
-    :alt: Build status
+    :target: https://travis-ci.org/askeing/diff_py
 
 The simple diff tool which is written by Python. The diff result can be printed in console or to html file.
 
