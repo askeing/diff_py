@@ -106,49 +106,44 @@ class HTMLDiffHelper(BaseDiffHelper):
         self.handle_dcmp(dcmp)
 
     def handle_dcmp(self, dcmp):
+        self.div_container.append(html.h2('Diff between %s and %s' % (dcmp.left, dcmp.right)))
+        if len(dcmp.left_only) == 0 and len(dcmp.right_only) == 0 and len(dcmp.diff_files) == 0:
+            self.div_container.append(html.p('No Differences Found'))
         # handle left dir1
-        self.div_container.append(html.h2('Only in %s' % (dcmp.left,)))
-        if len(dcmp.left_only) == 0:
-            self.div_container.append(html.p('There is no file only in %s' % (dcmp.left,)))
-        else:
+        if len(dcmp.left_only) > 0:
+            self.div_container.append(html.h3('Only in %s' % (dcmp.left,)))
             ul_left = html.ul()
             for name in dcmp.left_only:
                 ul_left.append(html.li(name))
             self.div_container.append(ul_left)
         # handle right dir2
-        self.div_container.append(html.h2('Only in %s' % (dcmp.right,)))
-        if len(dcmp.right_only) == 0:
-            self.div_container.append(html.p('There is no file only in %s' % (dcmp.right,)))
-        else:
+        if len(dcmp.right_only) > 0:
+            self.div_container.append(html.h3('Only in %s' % (dcmp.right,)))
             ul_right = html.ul()
             for name in dcmp.right_only:
                 ul_right.append(html.li(name))
             self.div_container.append(ul_right)
         # handle diff between dir1 and dir2
-        self.div_container.append(html.h2('Diff between %s and %s' % (dcmp.left, dcmp.right)))
-        if len(dcmp.diff_files) == 0:
-            self.div_container.append(html.p('No Differences Found'))
-        else:
-            for name in dcmp.diff_files:
-                if self.is_binary_file(os.path.join(dcmp.left, name), 1024):
-                    self.div_container.append(
-                        html.table(
-                            html.thead(
-                                html.tr(
-                                    html.th(os.path.join(dcmp.left, name)),
-                                    html.th(os.path.join(dcmp.right, name))
-                                )
-                            ),
-                            html.tbody(
-                                html.tr(
-                                    html.td('Binary files differ')
-                                )
-                            ),
-                            class_='table'
-                        )
+        for name in dcmp.diff_files:
+            if self.is_binary_file(os.path.join(dcmp.left, name), 1024):
+                self.div_container.append(
+                    html.table(
+                        html.thead(
+                            html.tr(
+                                html.th(os.path.join(dcmp.left, name)),
+                                html.th(os.path.join(dcmp.right, name))
+                            )
+                        ),
+                        html.tbody(
+                            html.tr(
+                                html.td('Binary files differ')
+                            )
+                        ),
+                        class_='table'
                     )
-                else:
-                    self.diff_file(os.path.join(dcmp.left, name), os.path.join(dcmp.right, name))
+                )
+            else:
+                self.diff_file(os.path.join(dcmp.left, name), os.path.join(dcmp.right, name))
         # handle sub-dirs
         for sub_dcmp in dcmp.subdirs.values():
             self.handle_dcmp(sub_dcmp)

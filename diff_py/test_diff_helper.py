@@ -90,7 +90,7 @@ class DiffHelperTest(unittest.TestCase):
     def test_html_diff_dir_not_equal(self):
         dh = HTMLDiffHelper()
         result = dh.diff(self.dir_a1, self.dir_b)
-        expected_re = r'<h2>Only in {0}</h2>\s*<ul>\s*<li>{1}</li>\s*</ul>'.format(self.dir_b, self.file_name_b)
+        expected_re = r'<h3>Only in {0}</h3>\s*<ul>\s*<li>{1}</li>\s*</ul>'.format(self.dir_b, self.file_name_b)
         self.assertIsInstance(result, html.html, 'The result is not html object.')
         self.assertRegex(result.unicode(), expected_re)
 
